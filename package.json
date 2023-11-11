@@ -24,6 +24,7 @@
 	"type": "module",
 	"dependencies": {
 		"firebase": "^9.23.0",
-		"sveltefire": "^0.4.2"
+		"sveltefire": "^0.4.2",
+		"tesseract.js": "^5.0.3"
 	}
 }
