@@ -1,6 +1,5 @@
 <script>
-  import FaAngleRight from 'svelte-icons/fa/FaAngleRight.svelte'
-  import FaAngleLeft from 'svelte-icons/fa/FaAngleLeft.svelte'
+  import { page } from '$app/stores';
 
   $: outerWidth = 0
 	$: innerWidth = 0
@@ -8,10 +7,21 @@
 	$: innerHeight = 0
   let question = "What is the capital of the United States?";
   const images = [
-    'https://t3.ftcdn.net/jpg/00/60/46/76/240_F_60467600_edVkJvDs6Zl0HMo6x6IdZoO5Qv3WZQ64.jpg',
+    'https://images.pexels.com/photos/1172018/pexels-photo-1172018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1988270/pexels-photo-1988270.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/355188/pexels-photo-355188.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/356966/pexels-photo-356966.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/4388164/pexels-photo-4388164.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/248082/pexels-photo-248082.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/4386150/pexels-photo-4386150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/192738/pexels-photo-192738.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/3839557/pexels-photo-3839557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/302100/pexels-photo-302100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1028904/pexels-photo-1028904.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   ]
 
-  import { page } from '$app/stores';
+  let randomNum = Math.floor(Math.random() * images.length);
+
   const searchParams = $page.url.searchParams;
   const teacher = searchParams.get('teacher');
 
@@ -27,7 +37,7 @@
       </p>
     </div>
     <div class="flex justify-center mt-12">
-      <img src={images[0]} class="object-cover h-[400px] w-[800px] rounded-lg" alt="img" />
+      <img src={images[randomNum]} class="object-cover h-[400px] w-[800px] rounded-lg" alt="img" />
     </div>
 
     <div class="mt-16 w-screen px-8 grid grid-cols-2 grid-rows-2 gap-4">
