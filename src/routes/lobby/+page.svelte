@@ -8,6 +8,7 @@
   import { docStore } from 'sveltefire';
   import { firestore } from "$lib/firebase";
   import { doc, getDoc, setDoc } from 'firebase/firestore';
+    import { stringify } from 'postcss';
 
   const gameStore = docStore(firestore, 'game/game');
   
@@ -80,7 +81,7 @@
   const searchParams = $page.url.searchParams;
   const teacher = searchParams.get('teacher');
 
-  const questionStore = docStore(firestore, 'questions/1');
+  const questionStore = docStore(firestore, 'questions/' + teacher);
 
 
   async function asdfasdf()
@@ -93,6 +94,7 @@
     asdf.answer4 = $questionStore.answer4;
     asdf.question = $questionStore.question;
     setDoc(gameRef, asdf);
+    console.log("HEE HEE HO")
   }
   $: {
     if (teacher && $questionStore)
