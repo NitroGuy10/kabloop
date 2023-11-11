@@ -2,7 +2,7 @@
   let variable = 1;
 </script>
 
-<div class="flex justify-center items-center">
+<div class="flex justify-center h-screen bg-blue-100">
   <div class="mt-64">
     <p class="text-7xl font-bold text-start">Learn more. Do more.</p>
     <p class="text-2xl font-medium text-start opacity-70 w-2/3 mt-4">Generate tests question from a picture and compete with others to learn the content.</p>
