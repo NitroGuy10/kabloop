@@ -1,11 +1,10 @@
-
 <script lang="ts">
-    let variable = 1;
-
-
+  let variable = 1;
 </script>
 
-
-<h1>Welcome to kabloop</h1>
-<p>{variable}</p>
-<button on:click={() => {variable++}}>increment</button>
+<p class="text-3xl">{variable}</p>
+<button
+  on:click={() => {
+    variable++;
+  }}>increment</button
+>
