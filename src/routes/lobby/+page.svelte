@@ -43,7 +43,7 @@
           clearInterval(interval);
       }
 
-      if ($gameStore && innerWidth > 1024)
+      if ($gameStore && teacher)
       {
         const gameRef = doc(firestore, "game/game");
         let asdf = $gameStore;
@@ -82,13 +82,13 @@
 
 </script>
 
-<svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight />
+<!-- <svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight /> -->
 
 <div class="h-screen overflow-hidden font-satoshi {$gameStore?.state === "reveal" ? "bg-green-100" : ""}">
-  {#if innerWidth > 1024}
+  {#if teacher}
     <div class="flex flex-col justify-center w-screen h-[60px] bg-gray-200">
       <p class="text-3xl text-center font-extrabold">
-        {question}
+        {$gameStore?.question}
       </p>
     </div>
     <p class="font-bold text-4xl text-center">{timeLeft}</p>
