@@ -80,7 +80,7 @@
       const difficulty = 0.1 * i;
       const question = tenQuestions["question" + i];
       const answer = tenQuestions["answer" + i];
-      const docRef = await addDoc(collection(db, "questions", String(i)), {
+      const docRef = await addDoc(collection(db, "questions"), {
         question: question,
         answer1: answer[0],
         answer2: answer[1],
