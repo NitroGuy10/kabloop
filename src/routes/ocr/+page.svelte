@@ -1,22 +1,47 @@
-
 <script lang="ts">
-import Tesseract from 'tesseract.js';
+  import Tesseract from "tesseract.js";
+  import { DownloadURL, UploadTask } from "sveltefire";
 
-let imageSrc = 'https://cdn.discordapp.com/attachments/1064320855217278998/1172961969289044018/IMG_0033.JPG?ex=656238f6&is=654fc3f6&hm=06eb0e9654c435b550e609cdcee7095deab186bfece352ebe62573e3d0d9dc9f&'; 
-console.log("yessir")
+  let file: any;
+  let result: any;
 
-async function performOCR() {
+  function chooseFile(e: any) {
+    file = e.target.files[0];
+  }
+
+  async function performOCR(imageSrc: any) {
+    console.log("Performing OCR" + imageSrc);
     if (imageSrc) {
-        const { data: { text } } = await Tesseract.recognize(
-            imageSrc,
-            'eng',    
-            { logger: info => console.log(info) } 
-        );
+      const {
+        data: { text },
+      } = await Tesseract.recognize(
+        imageSrc,
+        "eng"
+        // { logger: info => console.log(info) }
+      );
 
-        console.log('Recognized text:', text);
+      result = text;
     }
-}
-performOCR()
+  }
 </script>
 
-<p>ocr time </p>
+<input type="file" on:change={chooseFile} />
+
+{#if file}
+  <UploadTask ref="uploaded.jpg" data={file} let:progress let:snapshot>
+    {#if snapshot?.state === "running"}
+      {progress}% uploaded
+    {/if}
+
+    {#if snapshot?.state === "success"}
+      <DownloadURL ref={snapshot?.ref} let:link>
+        <a href={link} download>Link</a>
+        <button on:click={() => performOCR(link)}>Perform OCR</button>
+    </DownloadURL>
+    {/if}
+</UploadTask>
+{/if}
+
+{#if result}
+  <p>{result}</p>
+{/if}
