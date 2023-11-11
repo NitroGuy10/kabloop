@@ -7,7 +7,7 @@
 	$: innerHeight = 0
   import { docStore } from 'sveltefire';
   import { firestore } from "$lib/firebase";
-  import { doc, setDoc } from 'firebase/firestore';
+  import { doc, getDoc, setDoc } from 'firebase/firestore';
 
   const gameStore = docStore(firestore, 'game/game');
   
@@ -80,11 +80,32 @@
   const searchParams = $page.url.searchParams;
   const teacher = searchParams.get('teacher');
 
+  const questionStore = docStore(firestore, 'questions/1');
+
+
+  async function asdfasdf()
+  {
+    const gameRef = doc(firestore, "game/game");
+    let asdf = $gameStore;
+    asdf.answer1 = $questionStore.answer1;
+    asdf.answer2 = $questionStore.answer2;
+    asdf.answer3 = $questionStore.answer3;
+    asdf.answer4 = $questionStore.answer4;
+    asdf.question = $questionStore.question;
+    setDoc(gameRef, asdf);
+  }
+  $: {
+    if (teacher && $questionStore)
+    {
+      asdfasdf()
+    }
+    
+  }
 </script>
 
 <!-- <svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight /> -->
 
-<div class="h-screen overflow-hidden font-satoshi {$gameStore?.state === "reveal" ? "bg-green-100" : ""}">
+<div class="h-screen font-satoshi {$gameStore?.state === "reveal" ? "bg-green-100" : ""}">
   {#if teacher}
     <div class="flex flex-col justify-center w-screen h-[60px] bg-gray-200">
       <p class="text-3xl text-center font-extrabold">
