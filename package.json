@@ -21,5 +21,9 @@
 		"typescript": "^5.0.0",
 		"vite": "^4.4.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"firebase": "^9.23.0",
+		"sveltefire": "^0.4.2"
+	}
 }
