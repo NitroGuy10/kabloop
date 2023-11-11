@@ -1,11 +1,66 @@
-<script>
+<script lang="ts">
   import { page } from '$app/stores';
 
   $: outerWidth = 0
 	$: innerWidth = 0
 	$: outerHeight = 0
 	$: innerHeight = 0
-  let question = "What is the capital of the United States?";
+  import { docStore } from 'sveltefire';
+  import { firestore } from "$lib/firebase";
+  import { doc, setDoc } from 'firebase/firestore';
+
+  const gameStore = docStore(firestore, 'game/game');
+  
+  let timeLeft = 20;
+
+  let selectedIndex = 0;
+
+  function shuffle(array: any[]) {
+    let currentIndex = array.length,  randomIndex;
+
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  }
+
+  let questions = ["", "", "", ""];
+  let correctIndex = 0;
+  $: {
+    questions = shuffle([$gameStore?.answer1, $gameStore?.answer2, $gameStore?.answer3, $gameStore?.answer4]);
+    correctIndex = questions.indexOf($gameStore?.answer1);
+  }
+
+  function decrementCount() {
+      timeLeft--;
+      if (timeLeft === 0)
+      {
+          clearInterval(interval);
+      }
+
+      if ($gameStore && innerWidth > 1024)
+      {
+        const gameRef = doc(firestore, "game/game");
+        let asdf = $gameStore;
+        if (timeLeft === 0)
+        {
+          asdf.state = "reveal";
+        }
+        else
+        {
+          asdf.state = "playing";
+        }
+        setDoc(gameRef, asdf);
+      }
+  }
+
+  let interval = setInterval(decrementCount, 1000);
+
   const images = [
     'https://images.pexels.com/photos/1172018/pexels-photo-1172018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     'https://images.pexels.com/photos/1988270/pexels-photo-1988270.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
@@ -29,22 +84,23 @@
 
 <svelte:window bind:innerWidth bind:outerWidth bind:innerHeight bind:outerHeight />
 
-<div class="h-screen overflow-hidden">
+<div class="h-screen {$gameStore?.state === "reveal" ? "bg-green-100" : ""}">
   {#if innerWidth > 1024}
     <div class="flex flex-col justify-center w-screen h-[60px] bg-gray-200">
       <p class="text-3xl text-center font-medium">
-        {question}
+        {$gameStore?.question}
       </p>
     </div>
+    <p class="font-bold text-4xl text-center">{timeLeft}</p>
     <div class="flex justify-center mt-12">
       <img src={images[randomNum]} class="object-cover h-[400px] w-[800px] rounded-lg" alt="img" />
     </div>
 
     <div class="mt-16 w-screen px-8 grid grid-cols-2 grid-rows-2 gap-4">
-      <div id="button1" class="bg-red-200 p-4 rounded-md">Box 1</div>
-      <div id="button2" class="bg-blue-200 p-4 rounded-md">Box 2</div>
-      <div id="button3" class="bg-green-200 p-4 rounded-md">Box 3</div>
-      <div id="button4" class="bg-yellow-200 p-4 rounded-md">Box 4</div>
+      <div id="button1" class="bg-red-200 p-4 rounded-md   border-black {correctIndex === 0 && $gameStore?.state === "reveal" ? " border-4 " : ""}">{questions[0]}</div>
+      <div id="button2" class="bg-blue-200 p-4 rounded-md   border-black {correctIndex === 1 && $gameStore?.state === "reveal" ? " border-4 " : ""}">{questions[1]}</div>
+      <div id="button3" class="bg-green-200 p-4 rounded-md  border-black {correctIndex === 2 && $gameStore?.state === "reveal" ? " border-4 " : ""}">{questions[2]}</div>
+      <div id="button4" class="bg-yellow-200 p-4 rounded-md border-black {correctIndex === 3 && $gameStore?.state === "reveal" ? " border-4 " : ""}">{questions[3]}</div>
     </div>
     <div class="flex justify-center gap-4 mt-12">
       <button class="rounded-md px-4 py-2 border-gray-700 bg-slate-500 text-white">
@@ -62,13 +118,15 @@
     </div>
   {:else}
     <div class="flex justify-center my-12">
-      <img src={images[0]} class="object-cover h-[200px] w-1/2 rounded-lg" alt="img" />
+      <img src={images[randomNum]} class="object-cover h-[200px] w-1/2 rounded-lg" alt="img" />
     </div>
+
+
     <div class="flex flex-col gap-4 mx-4">
-      <button id="button1" class="bg-red-200 p-4 rounded-md text-center">Option 1</button>
-      <button id="button2" class="bg-blue-200 p-4 rounded-md text-center">Option 2</button>
-      <button id="button3" class="bg-green-200 p-4 rounded-md text-center">Option 3</button>
-      <button id="button4" class="bg-yellow-200 p-4 rounded-md text-center">Option 4</button>
+      <button id="button1" on:click={() => {selectedIndex = 0;}} class="bg-red-200 p-4 rounded-md text-center border-black {selectedIndex === 0 ? "border-4" : ""}">Option 1</button>
+      <button id="button2" on:click={() => {selectedIndex = 1;}} class="bg-blue-200 p-4 rounded-md text-center border-black   {selectedIndex === 1 ? "border-4" : ""}">Option 2</button>
+      <button id="button3" on:click={() => {selectedIndex = 2;}} class="bg-green-200 p-4 rounded-md text-center border-black  {selectedIndex === 2 ? "border-4" : ""}">Option 3</button>
+      <button id="button4" on:click={() => {selectedIndex = 3;}} class="bg-yellow-200 p-4 rounded-md text-center border-black  {selectedIndex === 3 ? "border-4" : ""}">Option 4</button>
     </div>
   {/if}
 
